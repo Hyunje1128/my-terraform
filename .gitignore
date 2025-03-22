@@ -1,32 +1,34 @@
-# Local .terraform directories
-**/.terraform/*
+# .gitignore
 
-# .tfstate files
+# Terraform state and cache
+**/.terraform/*
 *.tfstate
 *.tfstate.*
 
-# Crash log files
+# Sensitive input files
+*.tfvars
+*.tfvars.json
+*.backup
 crash.log
 
-# Exclude CLI configuration files
+# CLI and local config
 .terraformrc
 terraform.rc
 
-# Sensitive variable files
-*.tfvars
-*.tfvars.json
-
-# Backup files
-*.backup
-
-# IDE files
+# IDE/editor settings
 .vscode/
 .idea/
 *.swp
 *~
 
-# MacOS
+# OS-generated files
 .DS_Store
 
-# Terraform plan output
+# Terraform output
 plan.out
+
+# EC2 Key Pair
+*.pem
+
+# Bootstrap script
+scripts/user_data.sh
