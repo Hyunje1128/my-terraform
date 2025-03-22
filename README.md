@@ -2,6 +2,8 @@
 
 This repository defines an AWS-based modular infrastructure using Terraform.
 
+![프로젝트 아키텍쳐](https://github.com/Hyunje1128/KTB_Cloud/blob/main/Architecture_v3.png)
+
 ## 🔧 Project Structure
 
 - **modules/**: Reusable Terraform modules
