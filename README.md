@@ -47,6 +47,19 @@ Configure your `backend.tf` with S3 and DynamoDB for remote state management.
 ## 🔒 .gitignore
 Sensitive and generated files are excluded from version control (see `.gitignore`).
 
+## 📋 To-Do List
+
+| 단계 | 항목 |
+|------|------|
+| 1️⃣ | VPC 모듈 보완 (IGW, Route Table 등) |
+| 2️⃣ | EC2 + Auto Scaling Group 모듈 |
+| 3️⃣ | EC2 보안 그룹 모듈 |
+| 4️⃣ | RDS 모듈 |
+| 5️⃣ | CodeDeploy / CodePipeline 모듈 |
+| 6️⃣ | OpenVPN 모듈 |
+| 7️⃣ | 환경 구성 보완 (`prod`, tfvars 등) |
+| 8️⃣ | 고급 기능 (Remote backend, CI 등) |
+
 ---
 
 Feel free to fork and adapt for your own environment.
