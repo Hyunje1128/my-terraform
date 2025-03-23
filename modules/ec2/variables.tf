@@ -56,3 +56,8 @@ variable "target_group_arn" {
   type        = string
   description = "ALB Target Group ARN"
 }
+
+variable "tags" {
+  type    = map(string)
+  default = {}
+}

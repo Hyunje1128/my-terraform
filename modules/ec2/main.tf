@@ -20,10 +20,7 @@ resource "aws_launch_template" "main" {
     }
   }
 
-  tags = {
-    Name          = var.name
-    VersionLabel  = "v${formatdate("YYYYMMDD-HHmmss", timestamp())}" # 현재 버전 시각으로 태그
-  }
+    tags = var.tags
 }
 
 resource "aws_autoscaling_group" "main" {
