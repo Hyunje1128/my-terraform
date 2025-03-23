@@ -15,3 +15,9 @@ resource "aws_instance" "main" {
   user_data = var.user_data
 
 }
+
+// EIP 생성
+resource "aws_eip" "openvpn" {
+  instance = aws_instance.main.id
+}
+

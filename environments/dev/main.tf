@@ -106,3 +106,25 @@ module "openvpn" {
   user_data          = file("../../scripts/openvpn_userdata.sh")
 
 }
+
+// openvpn EIP 출력
+output "openvpn_public_ip" {
+  value = module.openvpn.openvpn_eip
+}
+
+// openvpn client.ovpn 파일 생성
+# locals {
+#   client_ovpn = templatefile("${path.module}/../../templates/client.ovpn.tpl", {
+#     openvpn_eip = module.openvpn.openvpn_eip
+#     ca_cert     = file("${path.module}/../../certs/ca.crt")
+#     client_cert = file("${path.module}/../../certs/client1.crt")
+#     client_key  = file("${path.module}/../../certs/client1.key")
+#     ta_key      = file("${path.module}/../../certs/ta.key")
+#   })
+# }
+
+# output "client1_ovpn" {
+#   value = local.client_ovpn
+#   sensitive = true
+# }
+
