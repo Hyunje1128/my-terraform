@@ -59,6 +59,7 @@ dh dh.pem
 auth SHA256
 tls-auth ta.key 0
 topology subnet
+push "route 10.0.0.0 255.255.0.0"
 server 10.8.0.0 255.255.255.0
 ifconfig-pool-persist ipp.txt
 push "dhcp-option DNS 8.8.8.8"
@@ -81,6 +82,8 @@ sysctl -p
 systemctl enable openvpn-server@server
 systemctl start openvpn-server@server
 
+# 6-1. MASQUERADE 설정
+iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+
 # 7. 설치 완료
-log "🎉 모든 OpenVPN 설정이 완료되었습니다!"
 echo "🎉 모든 OpenVPN 설정이 완료되었습니다!"

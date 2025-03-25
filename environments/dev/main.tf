@@ -38,7 +38,7 @@ module "ec2_sg" {
   name            = "ec2-sg"
   vpc_id          = module.vpc.vpc_id
   alb_sg_id       = module.alb_sg.alb_sg_id
-  ssh_cidr_blocks = ["10.0.0.0/16"] # private subnet에 있는 ec2 접근은 openvpn ssh롤 접근 -> openvpn ip 확인하고 입력
+  ssh_cidr_blocks = ["10.8.0.0/24"] # private subnet에 있는 ec2 접근은 openvpn ssh롤 접근 -> openvpn ip 확인하고 입력
 }
 
 // modules/ec2/main.tf
