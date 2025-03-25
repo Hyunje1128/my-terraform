@@ -9,6 +9,6 @@ output "public_ip" {
 }
 
 output "openvpn_eip" {
-  description = "Elastic IP assigned to OpenVPN server"
-  value       = aws_eip.openvpn.public_ip
+  description = "EIP address of the OpenVPN EC2 instance"
+  value       = var.pre_allocated_eip_address # 수정
 }

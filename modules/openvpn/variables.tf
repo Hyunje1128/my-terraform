@@ -32,3 +32,13 @@ variable "user_data" {
   description = "User data script to install OpenVPN"
   default     = ""
 }
+
+variable "pre_allocated_eip_id" {
+  type = string
+  description = "고정된 EIP ID (eipalloc-xxxx)"
+}
+
+variable "pre_allocated_eip_address" {  
+  type        = string
+  description = "고정된 EIP 주소 (예: 43.200.118.179)"
+}

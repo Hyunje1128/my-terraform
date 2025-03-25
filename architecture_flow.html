@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>VPN to RDS Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-6">
+    <div class="grid grid-cols-3 gap-8 items-center justify-items-center">
+      <!-- External User -->
+      <div class="text-center">
+        <div class="bg-white p-4 rounded-2xl shadow-xl w-40">
+          <p class="font-semibold">User PC</p>
+          <p class="text-sm text-gray-500">(VPN Client)</p>
+        </div>
+      </div>
+
+      <!-- VPN EC2 -->
+      <div class="text-center">
+        <div class="bg-blue-100 p-4 rounded-2xl shadow-xl w-40">
+          <p class="font-semibold text-blue-800">OpenVPN EC2</p>
+          <p class="text-sm text-gray-500">(Public Subnet)</p>
+        </div>
+      </div>
+
+      <!-- RDS -->
+      <div class="text-center">
+        <div class="bg-green-100 p-4 rounded-2xl shadow-xl w-40">
+          <p class="font-semibold text-green-800">RDS (MySQL)</p>
+          <p class="text-sm text-gray-500">(Private Subnet)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrows -->
+    <div class="grid grid-cols-3 mt-4 text-center text-gray-600">
+      <div></div>
+      <div>
+        <div class="text-2xl">➡️</div>
+        <p class="text-sm">VPN 연결<br />(10.8.0.0/24)</p>
+      </div>
+      <div>
+        <div class="text-2xl">➡️</div>
+        <p class="text-sm">MySQL 접근<br />(3306)</p>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="mt-8 text-center text-gray-700">
+      <p class="text-sm">
+        ✅ RDS는 퍼블릭 IP 없이 운영되며,<br />
+        ✅ 오직 OpenVPN EC2 인스턴스를 통해서만 접근이 가능합니다.
+      </p>
+    </div>
+  </body>
+</html>

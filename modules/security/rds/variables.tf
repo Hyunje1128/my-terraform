@@ -18,3 +18,8 @@ variable "db_port" {
   default = 3306
   description = "DB 접근 포트 (MySQL: 3306, PostgreSQL: 5432 등)"
 }
+
+variable "vpn_sg_id" {
+  description = "Security group ID for VPN access"
+  type        = string
+}

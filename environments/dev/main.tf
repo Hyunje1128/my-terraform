@@ -38,7 +38,7 @@ module "ec2_sg" {
   name            = "ec2-sg"
   vpc_id          = module.vpc.vpc_id
   alb_sg_id       = module.alb_sg.alb_sg_id
-  ssh_cidr_blocks = ["203.0.113.0/24"]
+  ssh_cidr_blocks = ["10.0.0.0/16"] # private subnet에 있는 ec2 접근은 openvpn ssh롤 접근 -> openvpn ip 확인하고 입력
 }
 
 // modules/ec2/main.tf
@@ -69,7 +69,8 @@ module "rds_sg" {
   name            = "rds-sg"
   vpc_id          = module.vpc.vpc_id
   ec2_sg_id       = module.ec2_sg.sg_id
-  db_port         = 3306
+  vpn_sg_id       = module.openvpn_sg.sg_id
+  # security_groups = [module.ec2_sg.sg_id, module.openvpn_sg.sg_id]
 }
 
 // modules/rds/main.tf
@@ -90,7 +91,7 @@ module "openvpn_sg" {
   source           = "../../modules/security/openvpn"
   name             = "openvpn-sg"
   vpc_id           = module.vpc.vpc_id
-  ssh_cidr_blocks  = ["211.244.225.211/32"] # 내 공인 ip가 변동될 가능성 있음 -> 그러면 ssh접속이 안됌
+  ssh_cidr_blocks  = ["211.244.225.211/32"] # [내 공인 ip] - 내 공인 ip가 변동될 가능성 있음 -> 그러면 ssh접속이 안됌(update_my_ip.sh이용)
   vpn_cidr_blocks  = ["0.0.0.0/0"]
 }
 

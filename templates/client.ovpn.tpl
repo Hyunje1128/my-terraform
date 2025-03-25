@@ -1,7 +1,7 @@
 client
 dev tun
 proto udp
-remote ${openvpn_eip} 1194
+remote ${server_ip} 1194
 resolv-retry infinite
 nobind
 persist-key
