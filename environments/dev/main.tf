@@ -90,7 +90,7 @@ module "openvpn_sg" {
   source           = "../../modules/security/openvpn"
   name             = "openvpn-sg"
   vpc_id           = module.vpc.vpc_id
-  ssh_cidr_blocks  = ["211.244.225.164/32"]
+  ssh_cidr_blocks  = ["211.244.225.211/32"] # 내 공인 ip가 변동될 가능성 있음 -> 그러면 ssh접속이 안됌
   vpn_cidr_blocks  = ["0.0.0.0/0"]
 }
 
@@ -104,27 +104,6 @@ module "openvpn" {
   security_group_id  = module.openvpn_sg.sg_id
   key_name           = "my-terraform-key"
   user_data          = file("../../scripts/openvpn_userdata.sh")
-
+  pre_allocated_eip_id      = "eipalloc-088d9679af9654fcd" # 고정 EIP ID
+  pre_allocated_eip_address = "43.200.118.179" # 고정 EIP 주소
 }
-
-// openvpn EIP 출력
-output "openvpn_public_ip" {
-  value = module.openvpn.openvpn_eip
-}
-
-// openvpn client.ovpn 파일 생성
-# locals {
-#   client_ovpn = templatefile("${path.module}/../../templates/client.ovpn.tpl", {
-#     openvpn_eip = module.openvpn.openvpn_eip
-#     ca_cert     = file("${path.module}/../../certs/ca.crt")
-#     client_cert = file("${path.module}/../../certs/client1.crt")
-#     client_key  = file("${path.module}/../../certs/client1.key")
-#     ta_key      = file("${path.module}/../../certs/ta.key")
-#   })
-# }
-
-# output "client1_ovpn" {
-#   value = local.client_ovpn
-#   sensitive = true
-# }
-
