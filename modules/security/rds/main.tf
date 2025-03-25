@@ -17,14 +17,13 @@ resource "aws_security_group" "main" {
   }
 }
 
-# Allow OpenVPN server SG access
-resource "aws_security_group_rule" "allow_vpn_sg" {
+# Allow ec2 server SG access
+resource "aws_security_group_rule" "allow_ec2_sg" {
+  description              = "Allow MySQL access from EC2"
   type                     = "ingress"
   from_port                = var.db_port
   to_port                  = var.db_port
   protocol                 = "tcp"
-  source_security_group_id = var.vpn_sg_id
+  source_security_group_id = var.ec2_sg_id
   security_group_id        = aws_security_group.main.id
-  description              = "Allow MySQL access from VPN SG"
-
 }

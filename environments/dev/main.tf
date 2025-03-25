@@ -38,7 +38,7 @@ module "ec2_sg" {
   name            = "ec2-sg"
   vpc_id          = module.vpc.vpc_id
   alb_sg_id       = module.alb_sg.alb_sg_id
-  ssh_cidr_blocks = ["10.8.0.0/24"] # private subnet에 있는 ec2 접근은 openvpn ssh롤 접근 -> openvpn ip 확인하고 입력
+  ssh_cidr_blocks = ["0.0.0.0/0"] # private subnet에 있는 ec2 접근은 openvpn ssh롤 접근 -> openvpn ip 확인하고 입력
 }
 
 // modules/ec2/main.tf
@@ -69,7 +69,6 @@ module "rds_sg" {
   name            = "rds-sg"
   vpc_id          = module.vpc.vpc_id
   ec2_sg_id       = module.ec2_sg.sg_id
-  vpn_sg_id       = module.openvpn_sg.sg_id
   # security_groups = [module.ec2_sg.sg_id, module.openvpn_sg.sg_id]
 }
 
@@ -91,20 +90,43 @@ module "openvpn_sg" {
   source           = "../../modules/security/openvpn"
   name             = "openvpn-sg"
   vpc_id           = module.vpc.vpc_id
-  ssh_cidr_blocks  = ["211.244.225.211/32"] # [내 공인 ip] - 내 공인 ip가 변동될 가능성 있음 -> 그러면 ssh접속이 안됌(update_my_ip.sh이용)
+  ssh_cidr_blocks  = ["0.0.0.0/0"]
   vpn_cidr_blocks  = ["0.0.0.0/0"]
 }
 
-// modules/openvpn/main.tf
 module "openvpn" {
   source             = "../../modules/openvpn"
   name               = "openvpn-server"
-  ami_id             = "ami-062cddb9d94dcf95d"
   instance_type      = "t3.micro"
+  # ami_id             = ami_id # ✅ OpenVPN Access Server AMI (서울 리전 기준)
   subnet_id          = module.vpc.public_subnets_ids[0]
-  security_group_id  = module.openvpn_sg.sg_id
   key_name           = "my-terraform-key"
-  user_data          = file("../../scripts/openvpn_userdata.sh")
+  security_group_id  = module.openvpn_sg.sg_id
   pre_allocated_eip_id      = "eipalloc-088d9679af9654fcd" # 고정 EIP ID
   pre_allocated_eip_address = "43.200.118.179" # 고정 EIP 주소
 }
+
+// ec2에 직접 openvpn설치 후 접속 -> private영역에 있는 ec2 접속이 안돼서 보류
+
+// modules/security/openvpn/main.tf
+# module "openvpn_sg" {
+#   source           = "../../modules/security/openvpn"
+#   name             = "openvpn-sg"
+#   vpc_id           = module.vpc.vpc_id
+#   ssh_cidr_blocks  = ["211.244.225.211/32"] # [내 공인 ip] - 내 공인 ip가 변동될 가능성 있음 -> 그러면 ssh접속이 안됌(update_my_ip.sh이용)
+#   vpn_cidr_blocks  = ["0.0.0.0/0"]
+# }
+
+# // modules/openvpn/main.tf
+# module "openvpn" {
+#   source             = "../../modules/openvpn"
+#   name               = "openvpn-server"
+#   ami_id             = "ami-062cddb9d94dcf95d"
+#   instance_type      = "t3.micro"
+#   subnet_id          = module.vpc.public_subnets_ids[0]
+#   security_group_id  = module.openvpn_sg.sg_id
+#   key_name           = "my-terraform-key"
+#   user_data          = file("../../scripts/openvpn_userdata.sh")
+#   pre_allocated_eip_id      = "eipalloc-088d9679af9654fcd" # 고정 EIP ID
+#   pre_allocated_eip_address = "43.200.118.179" # 고정 EIP 주소
+# }

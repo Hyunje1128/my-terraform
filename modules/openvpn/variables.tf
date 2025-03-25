@@ -6,6 +6,7 @@ variable "name" {
 
 variable "ami_id" {
   type = string
+  default = "ami-09a093fa2e3bfca5a" # OpenVPN Access Server AMI
   description = "Amazon Linux AMI or custom OpenVPN AMI ID"
 }
 
