@@ -130,3 +130,15 @@ module "openvpn" {
 #   pre_allocated_eip_id      = "eipalloc-088d9679af9654fcd" # 고정 EIP ID
 #   pre_allocated_eip_address = "43.200.118.179" # 고정 EIP 주소
 # }
+
+# module "iam_github" {
+#   source    = "../../modules/iam/github"
+#   user_name = "github-deploy-user"
+# }
+
+# module "github_s3" {
+#   source          = "../../modules/s3/github_bucket"
+#   bucket_name     = "my-deploy-artifacts-bucket"
+#   github_iam_arn  = module.github_iam.iam_user_arn
+# }
+

@@ -29,6 +29,12 @@ MY_TERRAFORM/
 │   └── stage/
 ├── mgmt/                    # 관리용 모듈 또는 구성 요소
 ├── modules/                 # 재사용 가능한 Terraform 모듈
+│   ├── openvpn/             # OpenVPN Access Server 모듈
+│   ├── codedeploy/          # CodeDeploy 배포 모듈
+│   ├── iam/
+│   │   └── github/          # GitHub 액세스용 IAM 모듈
+│   └── s3/
+│       └── artifact/       # 배포용 S3 버킷 모듈
 ├── scripts/                 # 초기화 스크립트 및 자동화 스크립트
 ├── templates/               # 템플릿 파일 (.tpl 등)
 ├── .gitignore
@@ -48,6 +54,27 @@ MY_TERRAFORM/
 
 ---
 
+## 🚀 CI/CD 구성 모듈 요약
+
+| 모듈 경로 | 설명 |
+|-----------|------|
+| `modules/codedeploy/` | CodeDeploy App 및 Deployment Group 생성 |
+| `modules/iam/github/` | GitHub Actions에서 사용할 IAM 사용자 및 정책 구성 |
+| `modules/s3/artifact/` | GitHub Actions 배포 아티팩트 저장용 S3 버킷 |
+
+#### 🔐 GitHub Secrets 등록 필요
+
+| 키 | 설명 |
+|----|------|
+| `AWS_ACCESS_KEY_ID` | GitHub IAM 사용자 키 |
+| `AWS_SECRET_ACCESS_KEY` | GitHub IAM 사용자 시크릿 |
+| `AWS_S3_BUCKET` | 배포 대상 버킷 이름 |
+| `AWS_REGION` | ex. `ap-northeast-2` |
+| `CODEDEPLOY_APP_NAME` | 배포 App 이름 |
+| `CODEDEPLOY_DEPLOYMENT_GROUP` | 배포 그룹 이름 |
+
+---
+
 ## 🧪 개발 진행 현황
 
 ### ✅ 완료
@@ -56,12 +83,15 @@ MY_TERRAFORM/
 - OpenVPN EC2 서버 및 고정 EIP 연결
 - RDS (MySQL) Private Subnet 배포
 - 인증서 수동 발급 및 VPN 연결 테스트 완료
+- CodeDeploy / IAM / S3 기반 CI/CD 인프라 구성
 
 ### ⏳ 진행 중
 
 - `.ovpn` 자동 생성 (templatefile + output 연동)
 - 인증서 자동 발급 스크립트 구성
 - 환경별 `.tfvars` 분리 및 리팩토링
+- GitHub Actions workflow 파일 작성
+- EC2 CodeDeploy Agent 설치 및 앱 배포 테스트
 
 ---
 
@@ -75,10 +105,12 @@ MY_TERRAFORM/
 | ✅ | RDS 모듈 (Private Subnet) |
 | ✅ | OpenVPN 모듈 (고정 IP 포함) |
 | ✅ | .ovpn 템플릿 자동 생성 구조 구성 |
-| ⏳ | client 인증서 자동 발급 구성 |
-| ⏳ | 환경 구성 보완 (prod, tfvars 등) |
-| ⏳ | Remote backend (S3 + DynamoDB) |
-| ⏳ | CodeDeploy / CodePipeline 모듈 구성 |
+| ✅ | CodeDeploy App, Group 구성 |
+| ✅ | GitHub IAM 사용자 구성 |
+| ✅ | S3 배포 버킷 생성 |
+| ⏳ | GitHub Actions Workflow 구성 |
+| ⏳ | CodeDeploy Agent 설치 (EC2) |
+| ⏳ | appspec.yml, 배포 스크립트 구성 |
 
 ---
 
