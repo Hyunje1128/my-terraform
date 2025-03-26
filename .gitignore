@@ -32,3 +32,10 @@ plan.out
 
 # Bootstrap script
 scripts/user_data.sh
+
+# openvpn
+*.ovpn
+*.key
+*.crt
+id_rsa*
+password.txt
