@@ -1,5 +1,10 @@
 // modules/iam/github/outputs.tf
 
+output "github_iam_arn" {
+  description = "IAM 사용자 ARN"
+  value       = aws_iam_user.github.arn
+}
+
 output "iam_user_name" {
   description = "생성된 IAM 사용자 이름"
   value       = aws_iam_user.github.name

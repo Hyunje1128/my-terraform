@@ -1,44 +1,38 @@
-name: Deploy to EC2 via CodeDeploy
+name: Deploy to EC2 with CodeDeploy
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]  # main 브랜치에 push 될 때만 동작
 
 jobs:
   deploy:
-    name: Deploy to EC2 using CodeDeploy
+    name: Upload & Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Zip source files
-        run: zip -r app.zip .
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Zip application
+        run: |
+          zip -r app.zip . -x ".git/*"
 
       - name: Upload to S3
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl private --follow-symlinks
-        env:
-          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-northeast-2
-          SOURCE_DIR: .
-          DEST_DIR: /app
+        run: |
+          aws s3 cp app.zip s3://${{ secrets.AWS_S3_BUCKET }}/app.zip
 
-      - name: Trigger CodeDeploy
-        uses: webfactory/create-aws-codedeploy-deployment@v1
-        with:
-          application-name: your-codedeploy-app-name
-          deployment-group: your-deployment-group-name
-          deployment-config: CodeDeployDefault.OneAtATime
-          s3-bucket: ${{ secrets.S3_BUCKET }}
-          s3-key: app.zip
-          bundle-type: zip
-        env:
-          AWS_REGION: ap-northeast-2
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Deploy via CodeDeploy
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ secrets.CODEDEPLOY_APP_NAME }} \
+            --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
+            --s3-location bucket=${{ secrets.AWS_S3_BUCKET }},bundleType=zip,key=app.zip \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --file-exists-behavior OVERWRITE

@@ -35,7 +35,5 @@ scripts/user_data.sh
 
 # openvpn
 *.ovpn
-*.key
-*.crt
-id_rsa*
+/certs/
 password.txt

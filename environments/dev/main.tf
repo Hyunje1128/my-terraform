@@ -131,14 +131,14 @@ module "openvpn" {
 #   pre_allocated_eip_address = "43.200.118.179" # 고정 EIP 주소
 # }
 
-# module "iam_github" {
-#   source    = "../../modules/iam/github"
-#   user_name = "github-deploy-user"
-# }
+module "iam_github" {
+  source    = "../../modules/iam/github"
+  user_name = "github-actions"
+}
 
-# module "github_s3" {
-#   source          = "../../modules/s3/github_bucket"
-#   bucket_name     = "my-deploy-artifacts-bucket"
-#   github_iam_arn  = module.github_iam.iam_user_arn
-# }
+module "github_s3" {
+  source          = "../../modules/s3"
+  bucket_name     = "my-deploy-artifacts-bucket"
+  github_iam_arn  = module.iam_github.github_iam_arn
+}
 
