@@ -18,14 +18,12 @@ resource "aws_launch_template" "main" {
     create_before_destroy = true
   }
 
-  tag_specifications {
-    resource_type = "instance"
-    tags = {
-      Name = var.name
-    }
-  }
-
     tags = var.tags
+
+    tag_specifications {
+      resource_type = "instance"
+      tags          = var.tags
+    }
 }
 
 resource "aws_autoscaling_group" "main" {
@@ -43,9 +41,13 @@ resource "aws_autoscaling_group" "main" {
     version = "$Latest"
   }
 
-  tag {
-    key                 = "Name"
-    value               = var.name
+  dynamic "tag" {
+  for_each = var.tags
+  content {
+    key                 = tag.key
+    value               = tag.value
     propagate_at_launch = true
   }
+}
+
 }
