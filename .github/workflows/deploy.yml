@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ap-northeast-2
 
       - name: Create deployment package (zip)
         run: zip -r deploy.zip . -x "*.git*"
@@ -27,7 +27,7 @@ jobs:
       - name: Upload to S3
         run: |
           aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_BUCKET }}/deploy.zip
-          
+
       - name: Deploy using CodeDeploy
         run: |
           aws deploy create-deployment \
