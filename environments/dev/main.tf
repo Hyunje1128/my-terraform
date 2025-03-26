@@ -56,6 +56,8 @@ module "ec2" {
   max_size           = 3
   min_size           = 1
   target_group_arn   = module.alb.target_group_arn
+  iam_role_name = module.codedeploy.codedeploy_iam_role_name
+
 
   tags = {
     VersionLabel = "v${formatdate("YYYYMMDD-HHmmss", timestamp())}"
@@ -137,7 +139,7 @@ module "codedeploy" {
   deployment_group_name = "my_deployment_group"
   iam_role_name         = "my-codedeploy-role"
   ec2_tag_key           = "Name"
-  ec2_tag_value         = "web-server"
+  ec2_tag_value         = "app-asg"
 }
 
 

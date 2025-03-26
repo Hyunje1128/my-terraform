@@ -12,3 +12,9 @@ output "codedeploy_service_role_arn" {
   value       = aws_iam_role.codedeploy_role.arn
   description = "CodeDeploy에 사용되는 IAM Role ARN"
 }
+
+output "codedeploy_iam_role_name" {
+  value       = aws_iam_role.codedeploy_role.name
+  description = "CodeDeploy에 사용되는 IAM 역할 이름"
+}
+

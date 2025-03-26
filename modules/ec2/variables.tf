@@ -61,3 +61,8 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "iam_role_name" {
+  description = "EC2에 연결할 IAM 역할 이름 (예: CodeDeploy용)"
+  type        = string
+}
