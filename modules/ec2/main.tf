@@ -1,11 +1,5 @@
 // modules/ec2/main.tf
 
-// ec2 iam role 생성
-resource "aws_iam_instance_profile" "codedeploy_profile" {
-  name = "${var.name}-instance-profile"
-  role = var.iam_role_name
-}
-
 resource "aws_launch_template" "main" {
   name_prefix   = var.name
   image_id      = var.ami_id
@@ -13,9 +7,9 @@ resource "aws_launch_template" "main" {
   key_name      = var.key_name
   vpc_security_group_ids = [var.security_group_id]
 
-  // iam instance profile 연결
+  // ec2 iam 역할
   iam_instance_profile {
-    name = aws_iam_instance_profile.codedeploy_profile.name
+    name = var.aws_iam_instance_profile_name
   }
 
   user_data = base64encode(var.user_data)

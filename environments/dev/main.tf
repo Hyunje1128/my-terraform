@@ -56,8 +56,7 @@ module "ec2" {
   max_size           = 3
   min_size           = 1
   target_group_arn   = module.alb.target_group_arn
-  iam_role_name = module.codedeploy.codedeploy_iam_role_name
-
+  aws_iam_instance_profile_name = module.iam_github.ec2_instance_profile_name
 
   tags = {
     VersionLabel = "v${formatdate("YYYYMMDD-HHmmss", timestamp())}"
@@ -146,6 +145,7 @@ module "codedeploy" {
 module "iam_github" {
   source    = "../../modules/iam"
   user_name = "github-actions"
+  ec2_iam_role_name = "ec2-role-for-codedeploy"
 }
 
 module "github_s3" {

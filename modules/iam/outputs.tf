@@ -22,3 +22,14 @@ output "secret_access_key" {
   sensitive   = true
 }
 
+output "ec2_instance_profile_name" {
+  description = "EC2 인스턴스에 연결할 IAM 인스턴스 프로파일 이름"
+  value       = aws_iam_instance_profile.ec2_instance_profile.name
+}
+
+output "ec2_iam_role_arn" {
+  description = "EC2 인스턴스에 할당된 IAM 역할의 ARN"
+  value       = aws_iam_role.ec2_instance_role.arn
+}
+
+
