@@ -134,7 +134,7 @@ module "openvpn" {
 module "codedeploy" {
   source                = "../../modules/codedeploy"
   app_name              = "my-app"
-  deployment_group_name = "my-deployment-group"
+  deployment_group_name = "my_deployment_group"
   iam_role_name         = "my-codedeploy-role"
   ec2_tag_key           = "Name"
   ec2_tag_value         = "web-server"
