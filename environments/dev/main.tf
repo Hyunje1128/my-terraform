@@ -131,8 +131,18 @@ module "openvpn" {
 #   pre_allocated_eip_address = "43.200.118.179" # 고정 EIP 주소
 # }
 
+module "codedeploy" {
+  source                = "../../modules/codedeploy"
+  app_name              = "my-app"
+  deployment_group_name = "my-deployment-group"
+  iam_role_name         = "my-codedeploy-role"
+  ec2_tag_key           = "Name"
+  ec2_tag_value         = "web-server"
+}
+
+
 module "iam_github" {
-  source    = "../../modules/iam/github"
+  source    = "../../modules/iam"
   user_name = "github-actions"
 }
 

@@ -19,8 +19,3 @@ variable "ec2_tag_key" {
 variable "ec2_tag_value" {
   type = string
 }
-
-variable "service_role_arn" {
-  type        = string
-  description = "IAM Role ARN to be used by CodeDeploy"
-}

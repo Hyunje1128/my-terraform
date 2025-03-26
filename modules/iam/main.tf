@@ -1,5 +1,6 @@
-// modules/iam/github/main.tf
+// modules/iam/main.tf
 
+// github 관련
 resource "aws_iam_user" "github" {
   name = var.user_name
 }
@@ -13,6 +14,7 @@ resource "aws_iam_user_policy_attachment" "s3_full_access" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
+//codedeploy 관련
 resource "aws_iam_user_policy_attachment" "codedeploy_access" {
   user       = aws_iam_user.github.name
   policy_arn = "arn:aws:iam::aws:policy/AWSCodeDeployFullAccess"

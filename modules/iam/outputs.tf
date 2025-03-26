@@ -1,4 +1,4 @@
-// modules/iam/github/outputs.tf
+// modules/iam/outputs.tf
 
 output "github_iam_arn" {
   description = "IAM 사용자 ARN"
@@ -21,3 +21,4 @@ output "secret_access_key" {
   value       = aws_iam_access_key.github.secret
   sensitive   = true
 }
+
