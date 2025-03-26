@@ -17,6 +17,13 @@
 #   value = module.openvpn.openvpn_eip # OpenVPN 서버의 고정 IP 출력
 # }
 
+// Action secret에 들어갈 정보 출력
+
+output "aws_region" {
+  description = "AWS 리전 정보"
+  value       = var.region
+}
+
 output "s3_bucket_name" {
   description = "배포 아티팩트를 저장할 S3 버킷 이름"
   value       = module.github_s3.bucket_name
@@ -26,6 +33,17 @@ output "codedeploy_service_role_arn" {
   description = "CodeDeploy에 연결된 IAM 역할 ARN"
   value       = module.codedeploy.codedeploy_service_role_arn
 }
+
+output "codedeploy_app_name" {
+  description = "CodeDeploy 애플리케이션 이름"
+  value       = "my-app"
+}
+
+output "codedeploy_deployment_group" {
+  description = "CodeDeploy 배포 그룹 이름"
+  value       = "my-deployment-group"
+}
+
 
 output "github_iam_arn" {
   description = "GitHub에서 사용할 IAM ARN"

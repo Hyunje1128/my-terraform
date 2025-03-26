@@ -1,38 +1,35 @@
-name: Deploy to EC2 with CodeDeploy
+name: Deploy to EC2 via CodeDeploy
 
 on:
   push:
-    branches: [ main ]  # main 브랜치에 push 될 때만 동작
+    branches:
+      - main # main 브런치
 
 jobs:
   deploy:
-    name: Upload & Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Set up AWS credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
-      - name: Zip application
-        run: |
-          zip -r app.zip . -x ".git/*"
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload to S3
         run: |
-          aws s3 cp app.zip s3://${{ secrets.AWS_S3_BUCKET }}/app.zip
+          zip -r deploy.zip . -x "*.git*"
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_BUCKET }}/deploy.zip
 
-      - name: Deploy via CodeDeploy
+      - name: Deploy using CodeDeploy
         run: |
           aws deploy create-deployment \
             --application-name ${{ secrets.CODEDEPLOY_APP_NAME }} \
             --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
-            --s3-location bucket=${{ secrets.AWS_S3_BUCKET }},bundleType=zip,key=app.zip \
-            --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --file-exists-behavior OVERWRITE
+            --s3-location bucket=${{ secrets.AWS_S3_BUCKET }},bundleType=zip,key=deploy.zip \
+            --file-exists-behavior OVERWRITE \
+            --deployment-config-name CodeDeployDefault.AllAtOnce
