@@ -16,8 +16,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: AKIA3M7ACXHW2RFPDHPM
+          aws-secret-access-key: 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
           aws-region: ap-northeast-2
 
       - name: Create deployment package (zip)
