@@ -59,6 +59,8 @@ module "ec2" {
   aws_iam_instance_profile_name = module.iam_github.ec2_instance_profile_name
 
   tags = {
+    Name         = "app-asg"
+    Environment  = "dev"
     VersionLabel = "v${formatdate("YYYYMMDD-HHmmss", timestamp())}"
   }
 }

@@ -21,7 +21,10 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Create deployment package (zip)
-        run: zip -r deploy.zip ./app -x "*.git*"
+        run: |
+          cd app
+          zip -r ../deploy.zip . -x "*.git*"
+          cd ..
       
       - name: Upload to S3
         run: |

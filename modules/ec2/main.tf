@@ -18,12 +18,12 @@ resource "aws_launch_template" "main" {
     create_before_destroy = true
   }
 
-    tags = var.tags
+  tag_specifications {
+    resource_type = "instance"
+    tags          = var.tags
+  }
 
-    tag_specifications {
-      resource_type = "instance"
-      tags          = var.tags
-    }
+  tags = var.tags
 }
 
 resource "aws_autoscaling_group" "main" {
