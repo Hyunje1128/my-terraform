@@ -1,5 +1,6 @@
 # Terraform AWS Infrastructure - my-terraform
-[Build my_terraform]
+[Build my_terraform](https://www.notion.so/adapterz/AWS-Architecture-1b2394a48061807e805dd5a3e1953b57)
+
 ![프로젝트 아키텍쳐](https://github.com/Hyunje1128/KTB_Cloud/blob/main/my-terraform.png)
 
 ## 🔧 구성 개요
