@@ -1,5 +1,5 @@
 # Terraform AWS Infrastructure - my-terraform
-
+[Build my_terraform]
 ![프로젝트 아키텍쳐](https://github.com/Hyunje1128/KTB_Cloud/blob/main/my-terraform.png)
 
 ## 🔧 구성 개요
