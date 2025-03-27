@@ -12,7 +12,8 @@
 - RDS (MySQL)
 - OpenVPN 서버 (고정 EIP)
 - 보안 그룹 (모듈 분리)
-- `.ovpn` 템플릿 자동 생성 구조
+- # `.ovpn` 템플릿 자동 생성 구조(미완성)
+- 정적 웹서버 배포 (Python HTTP Server)
 
 ---
 
@@ -21,20 +22,27 @@
 ```
 MY_TERRAFORM/
 ├── .terraform/              # Terraform 상태/캐시 디렉토리
-├── certs/                   # 인증서(.crt, .key 등) 저장 위치
+├── certs/                   # 인증서(.crt, .key 등) 저장 위치 -> .ovpn 자동 생성을 위한
+├── app/                     # 정적 웹 앱 디렉토리 (CI/CD 대상)
+│   ├── scirpts/             # 배포 후 실행할 start.sh 등 스크립트
+│   │       └── start.sh/    # Python HTTP 서버 실행 스크립트
+│   ├── index.html/          # 정적 웹 페이지 파일
+│   └── appsepc.yml/         # CodeDeploy용 앱 스펙
 ├── environments/            # 환경별 인프라 구성 (dev, prod 등)
-│   ├── dev/
-│   ├── dev-fast/
-│   ├── prod/
+│   ├── dev/                 # 개발자(me)가 테스트할 환경
+│   ├── dev-fast/            # 최소한의 리소스로 빠른 테스트 환경
+│   ├── prod/                # 실제 배포 환경
 │   └── stage/
 ├── mgmt/                    # 관리용 모듈 또는 구성 요소
 ├── modules/                 # 재사용 가능한 Terraform 모듈
-│   ├── openvpn/             # OpenVPN Access Server 모듈
+│   ├── vpc/                 # VPC 관련 모듈
+│   ├── alb/                 # Auto Scaling을 위한 로드발런서 모듈
+│   ├── ec2/                 # 시작템플릿 및 ec2와 관련된 모듈
+│   ├── rds/                 # db 관리를 위한 rds 모듈
+│   ├── security/            # 보안그룹 모듈 구성
 │   ├── codedeploy/          # CodeDeploy 배포 모듈
-│   ├── iam/
-│   │   └── github/          # GitHub 액세스용 IAM 모듈
-│   └── s3/
-│       └── artifact/       # 배포용 S3 버킷 모듈
+│   ├── iam/                 # GitHub 액세스용 IAM 모듈
+│   └── s3/                  # 배포용 S3 버킷 모듈
 ├── scripts/                 # 초기화 스크립트 및 자동화 스크립트
 ├── templates/               # 템플릿 파일 (.tpl 등)
 ├── .gitignore
@@ -59,8 +67,8 @@ MY_TERRAFORM/
 | 모듈 경로 | 설명 |
 |-----------|------|
 | `modules/codedeploy/` | CodeDeploy App 및 Deployment Group 생성 |
-| `modules/iam/github/` | GitHub Actions에서 사용할 IAM 사용자 및 정책 구성 |
-| `modules/s3/artifact/` | GitHub Actions 배포 아티팩트 저장용 S3 버킷 |
+| `modules/iam` | GitHub Actions에서 사용할 IAM 사용자 및 정책 구성 |
+| `modules/s3` | GitHub Actions 배포 아티팩트 저장용 S3 버킷 |
 
 #### 🔐 GitHub Secrets 등록 필요
 
@@ -82,16 +90,21 @@ MY_TERRAFORM/
 - Terraform 기반 모듈 구성 및 배포 자동화
 - OpenVPN EC2 서버 및 고정 EIP 연결
 - RDS (MySQL) Private Subnet 배포
-- 인증서 수동 발급 및 VPN 연결 테스트 완료
+- 인증서 수동 발급 및 VPN 연결 테스트 포기 -> 추후 고도화
+  - 지금은 ec2에 ami 이미지로 웹 콘솔에서 profile 다운으로 연결 
 - CodeDeploy / IAM / S3 기반 CI/CD 인프라 구성
+- GitHub Actions workflow 파일 작성
+- EC2 CodeDeploy Agent 설치 및 앱 배포 테스트
+- **정적 웹 서버를 EC2에 배포하고 ALB를 통해 접근 가능하도록 구성**
+  - Python HTTP 서버 실행
+  - ALB Target Group 설정 및 정상 상태 확인
+  - Nginx 제거 후 수동 서버 실행으로 502 오류 해결 -> 같은 80포트를 쓰기 때문
 
 ### ⏳ 진행 중
 
 - `.ovpn` 자동 생성 (templatefile + output 연동)
 - 인증서 자동 발급 스크립트 구성
 - 환경별 `.tfvars` 분리 및 리팩토링
-- GitHub Actions workflow 파일 작성
-- EC2 CodeDeploy Agent 설치 및 앱 배포 테스트
 
 ---
 
@@ -104,13 +117,15 @@ MY_TERRAFORM/
 | ✅ | EC2 보안 그룹 모듈 분리 |
 | ✅ | RDS 모듈 (Private Subnet) |
 | ✅ | OpenVPN 모듈 (고정 IP 포함) |
-| ✅ | .ovpn 템플릿 자동 생성 구조 구성 |
+| ✅ | OpenVPN ec2 접속 후 vpn이미지를 통한 vpn접속 |
 | ✅ | CodeDeploy App, Group 구성 |
 | ✅ | GitHub IAM 사용자 구성 |
 | ✅ | S3 배포 버킷 생성 |
+| ✅ | 정적 웹 서버 수동 배포 및 ALB 연동 테스트 |
 | ⏳ | GitHub Actions Workflow 구성 |
 | ⏳ | CodeDeploy Agent 설치 (EC2) |
 | ⏳ | appspec.yml, 배포 스크립트 구성 |
+| ⏳ | Python HTTP 서버 실행 자동화 (start.sh / user_data 등) |
 
 ---
 
