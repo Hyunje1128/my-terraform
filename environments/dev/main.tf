@@ -156,3 +156,16 @@ module "github_s3" {
   github_iam_arn  = module.iam_github.github_iam_arn
 }
 
+module "cloudfront" {
+  source        = "../../modules/cloudfront"
+  alb_dns_name  = module.alb.dns_name
+  tags          = var.tags
+}
+
+module "route53" {
+  source             = "../../modules/route53"
+  zone_id            = var.route53_zone_id
+  domain_name        = var.route53_domain_name
+  cloudfront_domain  = module.cloudfront.cloudfront_domain_name
+}
+

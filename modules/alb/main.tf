@@ -7,6 +7,8 @@ resource "aws_lb" "main" {
   security_groups    = [var.security_group_id]
   subnets            = var.public_subnet_ids
 
+  enable_deletion_protection = false # ← 이 줄이 바로 삭제 보호 여부를 지정
+
   tags = {
     Name = var.name
   }

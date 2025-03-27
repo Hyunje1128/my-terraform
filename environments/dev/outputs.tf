@@ -62,3 +62,8 @@ output "github_secret_access_key" {
   sensitive   = true
 }
 
+output "alb_dns_name" {
+  description = "ALB의 DNS 이름"
+  value       = module.alb.dns_name
+}
+
