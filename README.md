@@ -1,6 +1,6 @@
 # Terraform AWS Infrastructure - my-terraform
 
-![프로젝트 아키텍쳐](https://github.com/Hyunje1128/KTB_Cloud/blob/main/Architecture_v3.png)
+![프로젝트 아키텍쳐](https://github.com/Hyunje1128/KTB_Cloud/blob/main/my-terraform.png)
 
 ## 🔧 구성 개요
 이 프로젝트는 Terraform을 사용해 AWS 환경에 다음 리소스들을 자동으로 생성합니다:
