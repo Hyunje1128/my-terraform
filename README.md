@@ -3,6 +3,8 @@
 
 ![프로젝트 아키텍쳐](https://github.com/Hyunje1128/KTB_Cloud/blob/main/my-terraform.png)
 
+> 위 아키텍처는 GitHub Actions → S3 → CodeDeploy → EC2 오토스케일링 → ALB → CloudFront → Route 53 순으로 이어지는 전체 사용자 접점 배포 흐름을 시각화한 것입니다.
+
 ## 🔧 구성 개요
 이 프로젝트는 Terraform을 사용해 AWS 환경에 다음 리소스들을 자동으로 생성합니다:
 
@@ -15,6 +17,7 @@
 - 보안 그룹 (모듈 분리)
 - # `.ovpn` 템플릿 자동 생성 구조(미완성)
 - 정적 웹서버 배포 (Python HTTP Server)
+- 상태 파일 원격 저장 (S3 + DynamoDB 백엔드 구성)
 
 ---
 
@@ -83,6 +86,28 @@ MY_TERRAFORM/
 | `CODEDEPLOY_DEPLOYMENT_GROUP` | 배포 그룹 이름 |
 
 ---
+## 📦 상태 파일 관리 (S3 + DynamoDB Backend 구성)
+
+Terraform 협업을 위한 상태 관리 구성을 포함하고 있습니다:
+
+- terraform.tfstate는 S3 버킷에 저장되어 팀원 간 상태 공유
+
+- DynamoDB를 통해 상태 잠금(Locking) 적용하여 동시 실행 충돌 방지
+
+#### 🔧 Backend 설정 예시 (backend.tf)
+
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-states"
+    key            = "dev/terraform.tfstate"
+    region         = "ap-northeast-2"
+    dynamodb_table = "terraform-lock"
+    encrypt        = true
+  }
+}
+
+> ✅ S3 버킷과 DynamoDB 테이블은 별도 Terraform 모듈로 구성 가능하며, environments/dev 내 backend.tf로 각 환경별 상태를 분리 관리합니다.
+---
 
 ## 🧪 개발 진행 현황
 
@@ -106,6 +131,8 @@ MY_TERRAFORM/
 - `.ovpn` 자동 생성 (templatefile + output 연동)
 - 인증서 자동 발급 스크립트 구성
 - 환경별 `.tfvars` 분리 및 리팩토링
+- 상태 파일 백엔드 구성 (S3 + DynamoDB) 완료
+- CloudFront + Route 53 구성 및 유저 접근 경로 실제 배포 적용
 
 ---
 
@@ -123,10 +150,12 @@ MY_TERRAFORM/
 | ✅ | GitHub IAM 사용자 구성 |
 | ✅ | S3 배포 버킷 생성 |
 | ✅ | 정적 웹 서버 수동 배포 및 ALB 연동 테스트 |
-| ⏳ | GitHub Actions Workflow 구성 |
-| ⏳ | CodeDeploy Agent 설치 (EC2) |
-| ⏳ | appspec.yml, 배포 스크립트 구성 |
-| ⏳ | Python HTTP 서버 실행 자동화 (start.sh / user_data 등) |
+| ✅ | GitHub Actions Workflow 구성 |
+| ✅ | CodeDeploy Agent 설치 (EC2) |
+| ✅ | appspec.yml, 배포 스크립트 구성 |
+| ✅ | Python HTTP 서버 실행 자동화 (start.sh / user_data 등) |
+| ⏳ | CloudFront + Route53 도입 및 유저 접근 최적화 |
+| ⏳ | 상태 파일 백엔드 구성 (S3 + DynamoDB) |
 
 ---
 
