@@ -26,7 +26,6 @@
 ```
 MY_TERRAFORM/
 ├── .terraform/              # Terraform 상태/캐시 디렉토리
-├── certs/                   # 인증서(.crt, .key 등) 저장 위치 -> .ovpn 자동 생성을 위한
 ├── app/                     # 정적 웹 앱 디렉토리 (CI/CD 대상)
 │   ├── scirpts/             # 배포 후 실행할 start.sh 등 스크립트
 │   │       └── start.sh/    # Python HTTP 서버 실행 스크립트
@@ -46,16 +45,17 @@ MY_TERRAFORM/
 │   ├── security/            # 보안그룹 모듈 구성
 │   ├── codedeploy/          # CodeDeploy 배포 모듈
 │   ├── iam/                 # GitHub 액세스용 IAM 모듈
-│   └── s3/                  # 배포용 S3 버킷 모듈
+│   ├── s3/                  # 배포용 S3 버킷 모듈
+│   ├── acm/                 # SSL 인증서(AWS Certificate Manager) 모듈
+│   ├── cloudfront/          # CloudFront 구성 모듈
+│   └── route53/             # Route 53 도메인 및 레코드 모듈
 ├── scripts/                 # 초기화 스크립트 및 자동화 스크립트
 ├── templates/               # 템플릿 파일 (.tpl 등)
 ├── .gitignore
 ├── architecture_flow.html  # 인프라 아키텍처 흐름 문서 (시각화)
 ├── backend.tf              # 원격 상태 저장소 설정
-├── client1.ovpn            # OpenVPN 클라이언트 구성 파일
 ├── main.tf                 # 루트 Terraform 엔트리포인트
 ├── Makefile                # Terraform 작업 자동화를 위한 명령 정의
-├── my-terraform-key.pem    # SSH 키 (비밀키, 절대 공개 금지)
 ├── outputs.tf              # 출력 변수 정의
 ├── provider.tf             # 프로바이더(AWS 등) 설정
 ├── README.md               # 프로젝트 설명 문서
@@ -125,6 +125,7 @@ terraform {
   - Python HTTP 서버 실행
   - ALB Target Group 설정 및 정상 상태 확인
   - Nginx 제거 후 수동 서버 실행으로 502 오류 해결 -> 같은 80포트를 쓰기 때문
+- ALB 오리진을 통해 CloudFront에서 유저에게 배포 확인
 
 ### ⏳ 진행 중
 
@@ -133,6 +134,7 @@ terraform {
 - 환경별 `.tfvars` 분리 및 리팩토링
 - 상태 파일 백엔드 구성 (S3 + DynamoDB) 완료
 - CloudFront + Route 53 구성 및 유저 접근 경로 실제 배포 적용
+  - 등록된 도메인(rok-lee.com)으로 호스팅 구성 진행 중
 
 ---
 
@@ -154,7 +156,8 @@ terraform {
 | ✅ | CodeDeploy Agent 설치 (EC2) |
 | ✅ | appspec.yml, 배포 스크립트 구성 |
 | ✅ | Python HTTP 서버 실행 자동화 (start.sh / user_data 등) |
-| ⏳ | CloudFront + Route53 도입 및 유저 접근 최적화 |
+| ✅ | CloudFront + Route53 도입 및 유저 접근 최적화 |
+| ⏳ | 등록된 도메인(rok-lee.com)으로 호스팅 구성 |
 | ⏳ | 상태 파일 백엔드 구성 (S3 + DynamoDB) |
 
 ---
