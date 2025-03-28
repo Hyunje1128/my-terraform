@@ -67,3 +67,7 @@ output "alb_dns_name" {
   value       = module.alb.dns_name
 }
 
+output "acm_cert_arn" {
+  value = module.acm.acm_certificate_arn      # CloudFront에서 사용할 인증서 ARN 출력
+}
+

@@ -157,9 +157,11 @@ module "github_s3" {
 }
 
 module "cloudfront" {
-  source        = "../../modules/cloudfront"
-  alb_dns_name  = module.alb.dns_name
-  tags          = var.tags
+  source              = "../../modules/cloudfront"
+  alb_dns_name        = module.alb.dns_name
+  acm_cert_arn        = module.acm.acm_certificate_arn     # ← 추가
+  aliases             = ["www.rok-lee.com"]                # ← 추가
+  tags                = var.tags
 }
 
 module "route53" {
@@ -167,5 +169,12 @@ module "route53" {
   zone_id            = var.route53_zone_id
   domain_name        = var.route53_domain_name
   cloudfront_domain  = module.cloudfront.cloudfront_domain_name
+}
+
+module "acm" {
+  source           = "../../modules/acm"
+  domain_name      = "www.rok-lee.com"              # 사용할 도메인
+  route53_zone_id  = var.route53_zone_id            # 호스팅 영역 ID
+  tags             = var.tags
 }
 

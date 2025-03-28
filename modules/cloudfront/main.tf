@@ -36,9 +36,13 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
-  # 인증서 설정 (기본 CloudFront 인증서 사용)
+  aliases = var.aliases  # ← 커스텀 도메인 사용
+
+  # 인증서 설정 (ACM 인증서 사용 + 커스텀 도메인 연결)
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = var.acm_cert_arn
+    ssl_support_method        = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
   # 지역 제한 없음

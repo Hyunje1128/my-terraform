@@ -5,6 +5,16 @@ variable "alb_dns_name" {
   type        = string
 }
 
+variable "aliases" {
+  type        = list(string)
+  description = "CloudFront 커스텀 도메인 목록"
+}
+
+variable "acm_cert_arn" {
+  type        = string
+  description = "ACM 인증서 ARN (us-east-1)"
+}
+
 variable "tags" {
   description = "리소스 태그"
   type        = map(string)
