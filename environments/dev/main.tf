@@ -51,7 +51,7 @@ module "ec2" {
   key_name           = "my-terraform-key"         # 실제 키페어 이름
   security_group_id  = module.ec2_sg.sg_id
   subnet_ids         = module.vpc.private_app_subnet_ids
-  user_data          = file("../../scripts/user_data.sh")
+  # user_data          = file("../../scripts/user_data.sh")
   desired_capacity   = 2
   max_size           = 3
   min_size           = 1

@@ -10,4 +10,4 @@ cd $APP_DIR
 
 # 백그라운드 실행
 nohup python3 -m http.server 80 > "$LOG_FILE" 2>&1 &
-echo "[INFO] Static server started on port 8080" >> "$LOG_FILE"
+echo "[INFO] Static server started on port 80" >> "$LOG_FILE"
